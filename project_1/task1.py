@@ -59,5 +59,5 @@ result['n_business'] = get_n_business(dataRDD)
 result['top10_business'] = get_top10_business(dataRDD)
 
 with open(output_file_path, 'w') as output_file:
-  output_file.write(json.dumps(result))
+  output_file.write(json.dumps(result, indent=2))
 output_file.close()
