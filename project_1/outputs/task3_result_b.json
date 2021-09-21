@@ -1,5 +1,5 @@
 {
-  "m1": 112.21401596069336,
-  "m2": 95.06352400779724,
-  "reason": ""
+  "m1": 3.72873592376709,
+  "m2": 3.52725887298584,
+  "reason": "With spark, we sort the top 10 cities with highest stars in parallel. Without spark, we load all data in to memory and process all."
 }

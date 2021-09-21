@@ -1,10 +1,10 @@
 # Default dataset
-# review_filepath="./publicdata/test_review.json"
-# business_filepath="./publicdata/business.json"
+review_filepath="./publicdata/test_review.json"
+business_filepath="./publicdata/business.json"
 
 # Yelp dataset
-review_filepath="./yelpdata/yelp_academic_dataset_review.json"
-business_filepath="./yelpdata/yelp_academic_dataset_business.json"
+# review_filepath="./yelpdata/yelp_academic_dataset_review.json"
+# business_filepath="./yelpdata/yelp_academic_dataset_business.json"
 
 output_filepath_question_a="./outputs/task3_result_a.txt"
 output_filepath_question_b="./outputs/task3_result_b.json"
