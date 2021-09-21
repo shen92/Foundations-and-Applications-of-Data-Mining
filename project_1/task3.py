@@ -56,7 +56,7 @@ result_b = dict()
 result_b['m1'] = get_top10_with_python(reviewRDD, businessRDD)
 # Method2: Sort in Spark, take the first 10 cities, and then print these 10 cities
 result_b['m2'] = get_top10_with_spark(reviewRDD, businessRDD)
-result_b['reason'] = "With spark, we sort the top 10 cities with highest stars in parallel. Without spark, we load all data in to memory and process all. With spark, the context switch in parallel computing takes time while python doesn't. The performance is better with python with relative small inputs, and with scale of input grows, the performace with spark is better."
+result_b['reason'] = "With spark, we sort the top 10 cities with highest stars in parallel. Without spark, we load all data in to memory and process all. With spark, the map, shuffle and reduce operation of sort take time while python doesn't. The performance is better with python with relative small inputs, and with scale of input grows, the performace with spark is better (may not fit in memeory if dataset is too large)."
 
 with open(output_filepath_question_a, 'w') as output_file_question_a:
   output_file_question_a.write("city,stars\n")
