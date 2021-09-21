@@ -1,5 +1,5 @@
 {
-  "m1": 3.72873592376709,
-  "m2": 3.52725887298584,
-  "reason": "With spark, we sort the top 10 cities with highest stars in parallel. Without spark, we load all data in to memory and process all."
+  "m1": 6.142877817153931,
+  "m2": 4.702026844024658,
+  "reason": "With spark, we sort the top 10 cities with highest stars in parallel. Without spark, we load all data in to memory and process all. With spark, the context switch in parallel computing takes time while python doesn't. The performance is better with python with relative small inputs, and with scale of input grows, the performace with spark is better."
 }

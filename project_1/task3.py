@@ -3,16 +3,6 @@ import sys
 import json
 import time
 
-def load_review():
-  return  sc.textFile(review_filepath) \
-  .map(lambda item: json.loads(item)) \
-  .map(lambda review: (review['business_id'], review['stars']))
-
-def load_business():
-  return sc.textFile(business_filepath) \
-  .map(lambda item: json.loads(item)) \
-  .map(lambda business: (business['business_id'], business['city']))
-
 # city_average_stars 
 #   => reduceByKey(k: city,  v: (star, count)) 
 #   => (k: city, v: (sum(star), sum(count)))
@@ -23,12 +13,8 @@ def get_city_average_stars(reviewRDD, businessRDD):
     .reduceByKey(lambda accu, curr: (accu[0] + curr[0], accu[1] + curr[1])) \
     .map(lambda item: (item[0], (item[1][0] / item[1][1]))) \
     
-
-def get_top10_with_spark():
+def get_top10_with_spark(reviewRDD, businessRDD):
   start_time = time.time()
-
-  reviewRDD = load_review()
-  businessRDD = load_business()
 
   top10_city_average_stars = get_city_average_stars(reviewRDD, businessRDD) \
     .sortBy(lambda item: (-item[1], item[0])) \
@@ -36,11 +22,8 @@ def get_top10_with_spark():
   
   return time.time() - start_time
 
-def get_top10_with_python():
+def get_top10_with_python(reviewRDD, businessRDD):
   start_time = time.time()
-
-  reviewRDD = load_review()
-  businessRDD = load_business()
 
   city_average_stars = get_city_average_stars(reviewRDD, businessRDD).collect()
   top10_city_average_stars = sorted(city_average_stars, key=lambda item: (-item[1], item[0]))[0:10]
@@ -61,16 +44,19 @@ businessRDD = sc.textFile(business_filepath) \
   .map(lambda item: json.loads(item)) \
   .map(lambda business: (business['business_id'], business['city']))
 
+# Task 4.a
 result_a = get_city_average_stars(reviewRDD, businessRDD) \
             .sortBy(lambda item: (-item[1], item[0])) \
             .collect()
 
+# Task 4.b
 result_b = dict()
+# Piazza: You need to rerun the remaining part except for the init process (argument parsing, data reading, etc.)
 # Method1: Collect all the data, sort in python, and then print the first 10 cities
-result_b['m1'] = get_top10_with_python()
+result_b['m1'] = get_top10_with_python(reviewRDD, businessRDD)
 # Method2: Sort in Spark, take the first 10 cities, and then print these 10 cities
-result_b['m2'] = get_top10_with_spark()
-result_b['reason'] = "With spark, we sort the top 10 cities with highest stars in parallel. Without spark, we load all data in to memory and process all."
+result_b['m2'] = get_top10_with_spark(reviewRDD, businessRDD)
+result_b['reason'] = "With spark, we sort the top 10 cities with highest stars in parallel. Without spark, we load all data in to memory and process all. With spark, the context switch in parallel computing takes time while python doesn't. The performance is better with python with relative small inputs, and with scale of input grows, the performace with spark is better."
 
 with open(output_filepath_question_a, 'w') as output_file_question_a:
   output_file_question_a.write("city,stars\n")

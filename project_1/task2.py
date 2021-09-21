@@ -33,7 +33,11 @@ result['default'] = get_top10_business_analysis(dataRDD)
 
 # Customized partition function
 if n_partition != -1:
-  dataRDD = dataRDD.partitionBy(n_partition)
+  dataRDD = dataRDD.partitionBy(n_partition, lambda item: ord(item[0]))
+else:
+  default_partition = dataRDD.getNumPartitions()
+  dataRDD = dataRDD.partitionBy(default_partition, lambda item: ord(item[0]))
+
 result['customized'] = get_top10_business_analysis(dataRDD)
 
 with open(output_file_path, 'w') as output_file:
