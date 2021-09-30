@@ -116,3 +116,4 @@ dmypy.json
 # test data
 publicdata/
 yelpdata/
+tfdata/
