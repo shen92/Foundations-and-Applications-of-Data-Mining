@@ -1,9 +1,5 @@
-# Default dataset
 review_filepath="./publicdata/test_review.json"
-
-# Yelp dataset
 # review_filepath="../yelpdata/yelp_academic_dataset_review.json"
-
 output_filepath="./outputs/task1_result.json"
 
 rm -rf $output_filepath

@@ -1,5 +1,4 @@
 input_file_path="./publicdata/small2.csv"
-
 output_case_1_path="./outputs/task1_result_case_1.txt"
 output_case_2_path="./outputs/task1_result_case_2.txt"
 

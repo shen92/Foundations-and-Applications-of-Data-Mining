@@ -1,9 +1,5 @@
-# Default dataset
 review_filepath="./publicdata/test_review.json"
-
-# Yelp dataset
 # review_filepath="../yelpdata/yelp_academic_dataset_review.json"
-
 output_filepath="./outputs/task2_result.json"
 n_partition=$1
 
