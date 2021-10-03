@@ -68,7 +68,7 @@ def generate_frequent_itemsets(baskets, support):
   candidate_counts = count_candidate_itemset(baskets, singletons)
   singletons = filter_candidate_itemset(baskets, candidate_counts, support)
 
-  # result: <pass_num, candidate_set>
+  # result: <candidate_set_size, candidate_set>
   result = dict()
   
   frequent_item_size = 2
@@ -81,14 +81,15 @@ def generate_frequent_itemsets(baskets, support):
 
   # while frequent itemset is not empty
   while len(frequent_itemset) > 0:
-    # Candidates: C(k + 1) = generate(L(k))
+    # Candidates: C(k + 1) = generate candidates with frequent items from last pass => L(k)
     candidate_itemset = generate_candidate_itemset(frequent_itemset, frequent_item_size)
     # Counting: for each basket in baskets, count each candidate's occurrence
     candidate_counts = count_candidate_itemset(baskets, candidate_itemset)
-    # Filter: L(k + 1) = { set of candidate which greater than support }
+    # Filter: L(k + 1) = set => { candidate | candidate which greater than support }
     frequent_itemset = filter_candidate_itemset(baskets, candidate_counts, support)
-    # Save answer: record result for task 1
+    # Save answer: save result of current frequent_item_size for current baskets
     result[frequent_item_size] = frequent_itemset
+    # Go to next iteration
     frequent_item_size += 1
 
   return result
@@ -107,6 +108,7 @@ def find_local_candidate_itemsets(parition_iterator, support, num_baskets):
   for itemsets in frequent_itemsets.values():
       for itemset in itemsets:
           result.add(itemset)
+  
   return result
 
 '''
@@ -114,6 +116,7 @@ def find_local_candidate_itemsets(parition_iterator, support, num_baskets):
 '''
 def count_candidates(parition_iterator, candidates):
   local_basket = list(parition_iterator)
+
   # <candidate_itemset:frozenset, frequency:int>
   candidate_counts = collections.defaultdict(int)
 
@@ -163,8 +166,11 @@ def write_result(output_file, content):
   return
 
 sc = SparkContext('local[*]', 'task1')
-# 1 for user: [...business]
-# 2 for business: [...user]
+
+'''
+  1 for user: [...business]
+  2 for business: [...user]
+'''
 case_number = int(sys.argv[1])
 support = int(sys.argv[2])
 input_file_path = sys.argv[3]
@@ -173,16 +179,22 @@ output_file_path = sys.argv[4]
 start_time = time.time()
 data_RDD = sc.textFile(input_file_path)
 header = data_RDD.first()
-data_RDD = data_RDD.filter(lambda item: item != header)
 
 if case_number == 1:
   # 1 for user: [...business]
-  data_RDD = data_RDD.map(lambda item: (str(item.split(',')[0]), str(item.split(',')[1])))
+  data_RDD = data_RDD \
+  .filter(lambda item: item != header) \
+  .map(lambda item: (str(item.split(',')[0]), str(item.split(',')[1])))
 else:
   # 2 for business: [...user]
-  data_RDD = data_RDD.map(lambda item: (str(item.split(',')[1]), str(item.split(',')[0])))
+  data_RDD = data_RDD \
+    .filter(lambda item: item != header) \
+    .map(lambda item: (str(item.split(',')[1]), str(item.split(',')[0])))
 
-baskets_RDD = data_RDD.groupByKey()
+baskets_RDD = data_RDD \
+  .groupByKey() \
+  .map(lambda basket: (basket[0], set(basket[1])))
+
 baskets = baskets_RDD.collect()
 num_baskets = baskets_RDD.count()
 
@@ -217,8 +229,3 @@ with open(output_file_path, 'w') as output_file:
 output_file.close()
 
 print("Duration: " + str(time.time() - start_time))
-
-# print("==============================")
-# print()
-# print()
-# print("==============================")
