@@ -4,5 +4,4 @@ intermediate_file_path="./intermediate.csv"
 
 rm -rf $intermediate_file_path
 rm -rf $output_file_path
-spark-submit --executor-memory 4G --driver-memory 4G task2.py 20 50 $input_file_path $output_file_path
-open $output_file_path           
+spark-submit --executor-memory 4G --driver-memory 4G task2.py 20 50 $input_file_path $output_file_path         
