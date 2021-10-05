@@ -100,7 +100,7 @@ def generate_frequent_itemsets(baskets, support):
 '''
 def find_local_candidate_itemsets(parition_iterator, support, num_baskets):
   local_baskets = list(parition_iterator)
-  local_support = math.ceil((len(local_baskets) / num_baskets) * support)
+  local_support = (len(local_baskets) / num_baskets) * support
 
   frequent_itemsets = generate_frequent_itemsets(local_baskets, local_support)
 
