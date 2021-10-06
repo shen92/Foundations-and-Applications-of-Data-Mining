@@ -3,7 +3,7 @@ import sys
 import time
 import collections
 import math
-import csv
+from itertools import combinations
 
 '''
   Give an itemset, generate subset of size from itemset
@@ -11,13 +11,15 @@ import csv
   itemset: {...{...item}}
 '''
 def generate_candidate_itemset(itemset, size):
-  subsets = set()
-  for item_1 in itemset:
-      for item_2 in itemset:
-          subset = item_1.union(item_2)
-          if (len(subset) == size):
-              subsets.add(subset)
-  return subsets
+  new_candidates = set()
+  for old_candidate_1 in itemset:
+      for old_candidate_2 in itemset:
+          # (a, b, c) union (a, c, e) => (a, b, c, e) 
+          if old_candidate_1 != old_candidate_2:
+            candidate = old_candidate_1 | old_candidate_2
+            if len(candidate) == size:
+                new_candidates.add(candidate)
+  return new_candidates
 
 '''
   Count candidate frequent itemset occurrence in all baskets
@@ -69,8 +71,7 @@ def generate_frequent_itemsets(baskets, support):
   candidate_counts = count_candidate_itemset(baskets, singletons)
   singletons = filter_candidate_itemset(baskets, candidate_counts, support)
 
-  # result: <candidate_set_size, candidate_set>
-  result = dict()
+  result = set()
   
   frequent_item_size = 2
   # C(k) Candidate itemset of size k
@@ -78,7 +79,8 @@ def generate_frequent_itemsets(baskets, support):
   # L(k) Frequent itemset of size k
   frequent_itemset = singletons
 
-  result[1] = singletons
+  for item in singletons:
+    result.add(item)
 
   # while frequent itemset is not empty
   while len(frequent_itemset) > 0:
@@ -89,7 +91,8 @@ def generate_frequent_itemsets(baskets, support):
     # Filter: L(k + 1) = set => { candidate | candidate which greater than support }
     frequent_itemset = filter_candidate_itemset(baskets, candidate_counts, support)
     # Save answer: save result of current frequent_item_size for current baskets
-    result[frequent_item_size] = frequent_itemset
+    for item in frequent_itemset:
+      result.add(item)
     # Go to next iteration
     frequent_item_size += 1
 
@@ -98,31 +101,18 @@ def generate_frequent_itemsets(baskets, support):
 '''
   Phase 1: Find local candidate itemsets
 '''
-def find_local_candidate_itemsets(parition_iterator, support, num_baskets):
-  local_baskets = list(parition_iterator)
-  local_support = (len(local_baskets) / num_baskets) * support
-
-  frequent_itemsets = generate_frequent_itemsets(local_baskets, local_support)
-
-  result = set()
-
-  for itemsets in frequent_itemsets.values():
-      for itemset in itemsets:
-          result.add(itemset)
-  
-  return result
+def find_local_candidate_itemsets(local_baskets, support, num_baskets):
+  return generate_frequent_itemsets(local_baskets, (len(local_baskets) / num_baskets) * support)
 
 '''
   Phase 2: Find true frequent itemsets
 '''
-def count_candidates(parition_iterator, candidates):
-  local_basket = list(parition_iterator)
-
+def count_candidates(local_baskets, candidates):
   # <candidate_itemset:frozenset, frequency:int>
   candidate_counts = collections.defaultdict(int)
 
   # count candidate in current candidate_itemset
-  for basket in local_basket:
+  for basket in local_baskets:
     for candidate in candidates:
         if candidate.issubset(basket[1]):
           candidate_counts[candidate] += 1
@@ -223,7 +213,7 @@ num_baskets = baskets_RDD.count()
   candidates = candidate_itemset(partition_1) union candidate_itemset(partition_2) ... union candidate_itemset(partition_n)
 '''
 candidates_RDD = baskets_RDD \
-  .mapPartitions(lambda parition_iterator: find_local_candidate_itemsets(parition_iterator, support, num_baskets)) \
+  .mapPartitions(lambda parition_iterator: find_local_candidate_itemsets(list(parition_iterator), support, num_baskets)) \
   .distinct()
 candidates = candidates_RDD.collect()
 
@@ -234,7 +224,7 @@ candidates = candidates_RDD.collect()
   If a candidate count is greater than support, the candidate is true candidate
 '''
 frequent_itemsets_RDD = baskets_RDD \
-  .mapPartitions(lambda parition_iterator: count_candidates(parition_iterator, candidates)) \
+  .mapPartitions(lambda parition_iterator: count_candidates(list(parition_iterator), candidates)) \
   .reduceByKey(lambda accu, curr: accu + curr) \
   .filter(lambda candidate: candidate[1] >= support) \
   .map(lambda candidate: candidate[0])
