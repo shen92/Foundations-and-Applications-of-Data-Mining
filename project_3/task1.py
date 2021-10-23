@@ -1,22 +1,35 @@
 from pyspark import SparkContext
 import sys
-import math
 import time
-import csv
 from itertools import combinations
+import csv
 
-PARAM_a = [  271,277,281,283,293,307,311,313,317,331,337,347,349,353,359,367
-                ,373,379,383,389,397,401,409,419,421,431,433,439,443,449,457,461
-                ,463,467,479,487,491,499,503,509,521,523,541,547,557,563,569,571]
+PARAM_a = [ 30011, 30013, 30029, 30047, 30059, 30071, 30089, 30091, 30097, 30103,
+            30109, 30113, 30119, 30133, 30137, 30139, 30161, 30169, 30181, 30187,
+            30197, 30203, 30211, 30223, 30241, 30253, 30259, 30269, 30271, 30293,
+            30307, 30313, 30319, 30323, 30341, 30347, 30367, 30389, 30391, 30403,
+            30427, 30431, 30449, 30467, 30469, 30491, 30493, 30497, 30509, 30517,
+            30529, 30539, 30553, 30557, 30559, 30577, 30593, 30631, 30637, 30643,
+            30649, 30661, 30671, 30677, 30689, 30697, 30703, 30707, 30713, 30727,
+            30757, 30763, 30773, 30781, 30803, 30809, 30817, 30829, 30839, 30841,
+            30851, 30853, 30859, 30869, 30871, 30881, 30893, 30911, 30931, 30937,
+            30941, 30949, 30971, 30977, 30983, 31013, 31019, 31033, 31039, 31051,
+            31063, 31069, 31079, 31081, 31091, 31121, 31123, 31139, 31147, 31151,
+            31153, 31159, 31177, 31181, 31183, 31189, 31193, 31219, 31223, 31231,
+            31237, 31247, 31249, 31253, 31259, 31267, 31271, 31277, 31307, 31319 ]
 
-PARAM_b = [  577,587,593,599,601,607,613,617,619,631,641,643,647,653,659,661
-                ,673,677,683,691,701,709,719,727,733,739,743,751,757,761,769,773
-                ,787,797,809,811,821,823,827,829,839,853,857,859,863,877,881,883
-                ,887,907,911,919,929,937,941,947,953,967,971,977,983,991,997]
+PARAM_b = [ 71263, 71287, 71293, 71317, 71327, 71329, 71333, 71339, 71341, 71347,
+            71353, 71359, 71363, 71387, 71389, 71399, 71411, 71413, 71419, 71429,
+            71437, 71443, 71453, 71471, 71473, 71479, 71483, 71503, 71527, 71537,
+            71549, 71551, 71563, 71569, 71593, 71597, 71633, 71647, 71663, 71671,
+            71693, 71699, 71707, 71711, 71713, 71719, 71741, 71761, 71777, 71789,
+            71807, 71809, 71821, 71837, 71843, 71849, 71861, 71867, 71879, 71881 ]
 
 NUM_ROWS = 2
-NUM_BANDS = 15
+NUM_BANDS = 16
 THRESHOLD = 0.5
+M = 50287
+P = 92143
 
 '''
   Map list of user_id to list of indexed user_id with remove duplicates 
@@ -27,35 +40,37 @@ def map_user_id_to_index(user_ids, user_dict):
     user_indexes.add(user_dict[user_id])
   return list(user_indexes)
 
+'''
+    Generate signature for indexed business:[user] -> [user]
+'''
 def generate_signatures(user_indexes, m):
     signatures = []
     num_signatures = NUM_BANDS * NUM_ROWS
     for signature_index in range(num_signatures):
         signature = []
         a = PARAM_a[signature_index % len(PARAM_a)]
-        b = PARAM_b[signature_index % len(PARAM_b)]
+        b = PARAM_b[signature_index + 1 % len(PARAM_b)]
         for user_index in user_indexes:
-            signature.append((a * user_index + b) % m)
+            signature.append((a * user_index + b) % P % m)
         signatures.append(min(signature))
     return signatures
 
-
 '''
-    hash current band into index = map_band_to_bucket()  => bucket index
+    hash current band into index = hash_band_to_bucket()  => bucket index
     take parition of full signature array
 '''
-def map_band_to_bucket(signature, band_index):
+def hash_band_to_bucket(signature, band_index):
     a = PARAM_a[band_index % len(PARAM_a)]
-    b = PARAM_b[band_index % len(PARAM_b)]
-    return (a * sum(signature) + b) % 133333333337
+    b = PARAM_b[band_index + 1 % len(PARAM_b)]
+    return (b * sum(signature) + a) % P % M
 
-
+'''
+    comapre original business:[user] (user list) jaccard similarity
+'''
 def compute_jaccard_similarity(pair, indexed_business_user_dict):
     user_index_list_1 = indexed_business_user_dict[pair[0]]
     user_index_list_2 = indexed_business_user_dict[pair[1]]
-    union = len(set(user_index_list_1).union(set(user_index_list_2)))
-    intersection = len(set(user_index_list_1).intersection(set(user_index_list_2)))
-    return intersection / union
+    return len(set(user_index_list_1).intersection(set(user_index_list_2))) / len(set(user_index_list_1).union(set(user_index_list_2)))
 
 
 sc = SparkContext('local[*]', 'task1')
@@ -97,6 +112,9 @@ business_index_dict = business_RDD.collectAsMap()
 # dict: {index: business_id}
 index_business_dict = {v: k for k, v in business_index_dict.items()}
 
+'''
+    Generate signature matrix
+'''
 business_user_RDD \
   = data_RDD \
       .map(lambda row: (row.split(',')[1], row.split(',')[0])) \
@@ -112,6 +130,9 @@ indexed_business_user_dict = indexed_business_user_RDD.collectAsMap()
 business_signature_RDD \
     = indexed_business_user_RDD.map(lambda business_user: (business_user[0], generate_signatures(business_user[1], num_user)))
 
+'''
+    Hash each band into buckets
+'''
 # all possible candidate business pairs
 candidate_set = set()
 
@@ -120,7 +141,7 @@ for band_index in range(NUM_BANDS):
     # generate a candidate pair for later jc comapre
     # map: cut intervals x[0] and has the interval array of signature
     band_candidate_pairs = business_signature_RDD \
-        .map(lambda business_signature: (map_band_to_bucket(business_signature[1][band_index * NUM_ROWS:(band_index + 1) * NUM_ROWS], band_index), business_signature[0])) \
+        .map(lambda business_signature: (hash_band_to_bucket(business_signature[1][band_index * NUM_ROWS:(band_index + 1) * NUM_ROWS], band_index), business_signature[0])) \
         .groupByKey() \
         .filter(lambda business_band: len(business_band[1]) > 1) \
         .flatMap(lambda business_band: list(combinations(business_band[1], 2))) \
@@ -129,20 +150,22 @@ for band_index in range(NUM_BANDS):
     for pair in band_candidate_pairs:
         candidate_set.add(pair)
 
-
-results = sc.parallelize(list(candidate_set)) \
+'''
+    Verify candidate pairs
+'''
+results = sc.parallelize(candidate_set) \
     .map(lambda pair: (pair, compute_jaccard_similarity(pair, indexed_business_user_dict))) \
     .filter(lambda result: result[1] >= THRESHOLD) \
     .collect()
 
-results = sorted([(sorted([index_business_dict[result[0][0]], index_business_dict[result[0][1]]]), result[1]) for result in results])
+results = [(sorted([index_business_dict[result[0][0]], index_business_dict[result[0][1]]]), result[1]) for result in results]
+results = sorted(results)
 
-with open(output_file_name, 'w') as output_file:
-    output_file.write("business_id_1, business_id_2, similarity\n")
-    for result in results:
-        output_file.write(result[0][0] + "," + result[0][1] + "," + str(result[1]) + "\n")
-output_file.close()
+with open(output_file_name, 'w') as csv_file:
+  csv_writer = csv.writer(csv_file, delimiter=',')
+  csv_writer.writerow(["business_id_1", "business_id_2", "similarity"])
+  for result in results:
+      csv_writer.writerow([result[0][0], result[0][1], str(result[1])])
+csv_file.close()
 
 print("Duration:", str(time.time() - start_time))
-
-

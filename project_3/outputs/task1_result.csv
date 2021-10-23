@@ -1,4 +1,4 @@
-business_id_1, business_id_2, similarity
+business_id_1,business_id_2,similarity
 -8O4kt8AIRhM3OUxt-pWLg,_p64KqqRmPwGKhZ-xZwhtg,0.5
 -A5jntJgFglQ6zwAmOiOMw,cTqIuG-fvlQQL0OWzsFdig,0.5
 -Jhlh8Scjy669NdtCfKSSg,o5Mofj5KJkYAMs_fhxftpg,0.5
@@ -125,10 +125,9 @@ business_id_1, business_id_2, similarity
 6QKauV9Qt9VgX38-R7Q--g,CAOnmH06liJa74jkK-uZ3A,0.5
 6QKauV9Qt9VgX38-R7Q--g,oRmCI0p2mvlrGwilJloFTQ,0.5
 6kcjOA5J8NFgkx7DsrKghg,NDxLVsaoxl7l0qUy5eCN6g,0.5
-6sCdVRtmhJgNqKh9Vx6JXw,WvkxYyA1fXDPDyqIVn8zBQ,0.5
-6sCdVRtmhJgNqKh9Vx6JXw,uyFQv-D-E5JfNIu3_xOVww,0.5
 6wc9X5L4kOXV2vm0ptlbSQ,Xdagpu9Jz65fBmOSjjOJjA,0.5
 6zup5PwUm8dHlp0s2qxAbg,uQdk6xm0TE4qji48yysRDA,0.5
+744U45t4T97Q-0wqrsmKog,Qa3CAciWwIUXM-KzwTv4Wg,0.5
 74PuNP7egqbaloqDecGsrA,cfMqHwJc4qgdIL6oew9EJQ,0.5
 7Dwo13ZxVBKkBuRhYEBMiw,CuyHam2xMGNrGjaToZjcig,0.5
 7FFlMoNoIW5W3KgCYqknmQ,Jo5G_-AN2S1Qv6ngeF79aw,0.5
@@ -213,12 +212,14 @@ CgF0aw5JgUnpn4BrieN5QA,vt7iOHC_O7NO5-88P7SXcw,0.5
 CpqlSQEt7eLl8GVmGMlXLA,V57p_HiFzTokk_7nRO4weA,0.5
 CpqlSQEt7eLl8GVmGMlXLA,rPeHN1B8FyYzI7GzVFam3w,0.5
 CpqlSQEt7eLl8GVmGMlXLA,ugIDAeQPfKs9GVBaPUSBkA,0.5
+CrIWqmuO2uQWwl3z11K_BA,pCer-vIZM05p423MFmiSng,0.5
 CrTbzS1sdzgnBlJU6fYKpw,XNqfEq_CVYltOfg4aUMQrw,0.5
 CrTbzS1sdzgnBlJU6fYKpw,i-LDatuEXFN3EDZK1sgllQ,0.5
+CuyHam2xMGNrGjaToZjcig,PNRSuNZyLLEo1gmHtb0CXA,0.5
 D47sxEtW7DZHfUnWKrjRsg,L5dX210yl63PNOfZJHgUEg,0.5
 D47sxEtW7DZHfUnWKrjRsg,U4PakuOi1_IvOHzimI39bA,0.5
-D8qUkxB9IpT8IhnZV23auQ,uDKO9NRkk8ThjyLdlakVZQ,0.5
 D8whLHsJ2f_tM3Y2lJgMOg,cC9wi58GkVqWDHhc0rYxeQ,0.5
+D8ztK8n4L0_6cAslAPFYTg,KAgQ0bua30vuMZUmRHWcKQ,0.5
 D8ztK8n4L0_6cAslAPFYTg,ewzwgSuA0_6um2q9U-iQvA,0.5
 D8ztK8n4L0_6cAslAPFYTg,vgaA8bqGtd2uYj3KuWC9yw,0.5
 DBnLtge5LRkLzVqJFspfMQ,ymyEH_7lZV1ytVsSUGcsag,0.5
@@ -304,6 +305,7 @@ IOxRbnv2YnLtErYY3TrU3A,WEs9MN1M6tixwEz844jCUw,0.5
 IOxRbnv2YnLtErYY3TrU3A,WvkxYyA1fXDPDyqIVn8zBQ,0.5
 IOxRbnv2YnLtErYY3TrU3A,j6MtKpKdqZC2wXnQetGBIQ,0.5
 IOxRbnv2YnLtErYY3TrU3A,uyFQv-D-E5JfNIu3_xOVww,0.5
+Icj9QzQxqvzOmPm_liAq1Q,Jo5G_-AN2S1Qv6ngeF79aw,0.5
 IdjZYxqGmqrFpAikkoIDcg,VxncdfkMZ4CLCbkFAGRhvA,0.5
 Ijdoi6pDMK3Burw3TtAOZg,jYU4Nd71giCWpLuj5JIxgg,0.5
 ImSA-iQAAV_mHd32y4VIVA,wpDJUu8Ty_eyQJENUy7fIw,0.5
@@ -328,6 +330,7 @@ K2lscpx0S9wpqNz0s9AIwQ,iO86eCaZJBHqi1sZ1ELk6A,1.0
 KEyjG-6G4Dbo3p1Wmnxs4Q,fOqRkFQNazfaAkH2eD_G6Q,0.5
 KSIojNhortNYG6MHqjTxlQ,ZyngwaGb_qLTwCvkU-MP5A,0.5
 KXiwq_g2w1Sh4Y7_1nNS1Q,OsYA1vCXgopNOOpssou0uw,0.5
+KYxiIkANSVjLhdO939GK6A,fyC9gornWONtfkVEO4pqbw,0.5
 Kb43diOoBV4l77bxpn2k3Q,MOd-00nJo6xwg-cZT-RBTQ,0.5
 KmOl0a5UhaKAK8S_K7HCTA,or4yipilbCkKIFnF1RP5Ow,0.5
 KokCcoahHa2ajm-C_7bJrw,XikzLI3Zm02WR9a2xO5C-w,0.5
@@ -426,7 +429,6 @@ RofPcfgxItpYw1eQ3e1Hjw,u_MdwAj7eGenc0YhqQy6nA,0.5
 S4AoACdQHexs4tMiodZiYg,VdWMXE1mw1-XeAYlq2T4xQ,0.5
 S4AoACdQHexs4tMiodZiYg,guKEIlmotSbtbi500bQNXA,0.5
 S7TY9oCMqK-TffWrygetcw,eJtmOfqwGj5sYKQrB01oWQ,0.5
-SEGOA4olYPMlfA45H3gF0g,yzAB_pRwk8FJl3aILiiySA,0.5
 Sb1zux3s-WoarWD_gcehjw,WLu8QHuN6zjlBEJ7HXIg1Q,0.5
 Syy4Gr1JrxICbiDm64go3Q,oWlw9371cuPN-dQ-VEwgYg,0.6
 T6pBz7Je2Bxz-Du_31LOwQ,dwAPMrdLwSn1KCsJzz_oLA,0.5
@@ -445,6 +447,8 @@ TsWkDnmXjvXDtSeuSJzwyQ,peLVrfhLlWf_vVCFwN_Ghw,0.5
 U0eUwTGWDBVdE67qVHYEjQ,bjnoRbgX9iNob7XpXdiPYA,0.5
 UDninOBVbW1aFSRvxRW32w,WcHTXumqKMt0WdF-9RWljw,0.5
 UOK4ARjGtOtfYZSIm57ROw,_0d-uqjdfeL23s2xgje4Pw,0.6666666666666666
+UOK4ARjGtOtfYZSIm57ROw,_HhZV5S7sypfcE2AcEkL4w,0.5
+UOK4ARjGtOtfYZSIm57ROw,q5O7SDxC6GpThfEdOYKw4A,0.5
 URCmJ-uP_2FyHrShsRPycA,kTTpBCzK-xeI3yESKIFuUg,1.0
 UbycymnVPeXDpKCgMssZhA,hntnEJN_wGWG7KQjZ4aVLQ,0.5
 UirWbEXBYqw9cE63Ph-Png,WEs9MN1M6tixwEz844jCUw,0.5
@@ -524,6 +528,7 @@ br19XpHNLqMuMp1kObb7pg,hU-2Uu8el-PgcE6EXeg3bA,1.0
 cOqd9ou3uf-1k3OWFo-_CQ,rPeHN1B8FyYzI7GzVFam3w,0.5
 cOqd9ou3uf-1k3OWFo-_CQ,ugIDAeQPfKs9GVBaPUSBkA,0.5
 cQvH2Dnj3yf7zafC5a85ow,hD03alkIFsIyoN2rszpeOw,0.5
+cS5eXA7BW7I2IxLw-sx9YQ,hbC_iLadZFYVLLO7crmi-A,0.5
 cTPQYGWHhR0v-t5fKU_mWg,kTvZKyQ28vWeYVKAyq5XyA,1.0
 cmEM2YwTaMoREvxUksco6A,uI85wwAw_SQXyObv-cwfkA,1.0
 cmEM2YwTaMoREvxUksco6A,vxVVBGJCrd1F5ELKpFc-Mw,0.5
@@ -535,7 +540,6 @@ dutu1EkjTaTiLmBIkOAeqw,q5O7SDxC6GpThfEdOYKw4A,0.5
 e0kSnKyN5d5nJ4nwnkX3YQ,tMKblwX0CeCDZbCz6ruyPg,0.5
 eAxG2aLSnxtgBYZGSm0njQ,r8h3_Chc7davvVelcvV-NQ,0.5
 eAxG2aLSnxtgBYZGSm0njQ,yDfOSuljYJdX9zftLbTbxw,0.5
-eNfSygNzzmwR33QXpfC-Qg,tvhcshPITUGa_ffUlU-BHA,0.5
 ede2MkaohtkWU4GtrgdfsQ,zm8u9z2KCwEkNiCD59UQ3Q,0.6666666666666666
 ep3-l1UJJMkKHLLtrh1Uvg,gtqtnzgzDCWVFi298dIvow,0.5
 fJDv3U-BlFtaIjqBbzD3LA,iht90lGQE6FSbyvC6mi-WA,1.0
