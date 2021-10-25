@@ -104,9 +104,13 @@ def get_user_business_ids(user_id, user_business_rate_dict):
   return {}
 
 sc = SparkContext('local[*]', 'task2_1')
+sc.setLogLevel("OFF")
 
 start_time = time.time()
 
+'''
+  Pre-processing input and output data
+'''
 # user-item matrix
 train_file_name = sys.argv[1]
 # user-item pairs to predict
@@ -126,14 +130,6 @@ header = predict_data_RDD.first()
 predict_data_RDD = predict_data_RDD.filter(lambda item: item != header and len(item) > 0)
 # 0: user_id, 1: business_id
 predict_data_RDD = predict_data_RDD.map(lambda item: (item.split(',')[0], item.split(',')[1]))
-
-'''
-  Create business set
-'''
-businesses = train_data_RDD \
-  .map(lambda item: item[1]) \
-  .distinct() \
-  .collect()
 
 '''
   Create {user_id:{business_id:rate}} dict

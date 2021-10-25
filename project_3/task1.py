@@ -74,6 +74,7 @@ def compute_jaccard_similarity(pair, indexed_business_user_dict):
 
 
 sc = SparkContext('local[*]', 'task1')
+sc.setLogLevel("OFF")
 
 start_time = time.time()
 
@@ -87,39 +88,36 @@ data_RDD = data_RDD.filter(lambda item: item != header)
 '''
     Preprocessing users
 '''
-user_RDD \
-  = data_RDD \
-      .map(lambda row: row.split(',')[0]) \
-      .distinct() \
-      .zipWithIndex()
+user_RDD = data_RDD \
+    .map(lambda row: row.split(',')[0]) \
+    .distinct() \
+    .zipWithIndex()
 num_user = user_RDD.count()
 # dict: {user_id: index}
 user_index_dict = user_RDD.collectAsMap()
 # dict: {index: user_id}
-index_user_dict = {v: k for k, v in user_index_dict.items()}
+index_user_dict = { index: user_id for user_id, index in user_index_dict.items() }
 
 '''
     Preprocessing businesses
 '''
-business_RDD \
-  = data_RDD \
-      .map(lambda row: row.split(',')[1]) \
-      .distinct() \
-      .zipWithIndex()
+business_RDD = data_RDD \
+    .map(lambda row: row.split(',')[1]) \
+    .distinct() \
+    .zipWithIndex()
 num_business = business_RDD.count()
 # dict: {business_id: index}
 business_index_dict = business_RDD.collectAsMap()
 # dict: {index: business_id}
-index_business_dict = {v: k for k, v in business_index_dict.items()}
+index_business_dict = { index: business_id for business_id, index in business_index_dict.items() }
 
 '''
     Generate signature matrix
 '''
-business_user_RDD \
-  = data_RDD \
-      .map(lambda row: (row.split(',')[1], row.split(',')[0])) \
-      .groupByKey() \
-      .map(lambda item: (item[0], list(item[1])))
+business_user_RDD = data_RDD \
+    .map(lambda row: (row.split(',')[1], row.split(',')[0])) \
+    .groupByKey() \
+    .map(lambda item: (item[0], list(item[1])))
 # list: (business_id: [user_id])
 business_user = business_user_RDD.collect()
 business_user_dict = business_user_RDD.collectAsMap()

@@ -1,6 +1,9 @@
 import numpy as np
+import sys
 
-with open("outputs/task2_1_result.csv") as in_file:
+output_file_name = sys.argv[1]
+
+with open(output_file_name) as in_file:
     guess = in_file.readlines()[1:]
 with open("publicdata/yelp_val.csv") as in_file:
     ans = in_file.readlines()[1:]
