@@ -121,12 +121,12 @@ business_user_RDD = data_RDD \
 # list: (business_id: [user_id])
 business_user = business_user_RDD.collect()
 business_user_dict = business_user_RDD.collectAsMap()
-indexed_business_user_RDD \
-    = business_user_RDD.map(lambda business_user: (business_index_dict[business_user[0]], map_user_id_to_index(business_user[1], user_index_dict)))
+indexed_business_user_RDD = business_user_RDD \
+    .map(lambda business_user: (business_index_dict[business_user[0]], map_user_id_to_index(business_user[1], user_index_dict)))
 indexed_business_user_dict = indexed_business_user_RDD.collectAsMap()
 
-business_signature_RDD \
-    = indexed_business_user_RDD.map(lambda business_user: (business_user[0], generate_signatures(business_user[1], num_user)))
+business_signature_RDD = indexed_business_user_RDD \
+    .map(lambda business_user: (business_user[0], generate_signatures(business_user[1], num_user)))
 
 '''
     Hash each band into buckets
@@ -152,18 +152,18 @@ for band_index in range(NUM_BANDS):
     Verify candidate pairs
 '''
 results = sc.parallelize(candidate_set) \
-    .map(lambda pair: (pair, compute_jaccard_similarity(pair, indexed_business_user_dict))) \
-    .filter(lambda result: result[1] >= THRESHOLD) \
+    .map(lambda pair: (index_business_dict[pair[0]], index_business_dict[pair[1]], compute_jaccard_similarity(pair, indexed_business_user_dict))) \
+    .filter(lambda result: result[2] >= THRESHOLD) \
+    .map(lambda result: (sorted([result[0], result[1]]), result[2])) \
+    .map(lambda result: (result[0][0], result[0][1], result[1])) \
+    .sortBy(lambda result: (result[0], result[1], -result[2])) \
     .collect()
-
-results = [(sorted([index_business_dict[result[0][0]], index_business_dict[result[0][1]]]), result[1]) for result in results]
-results = sorted(results)
 
 with open(output_file_name, 'w') as csv_file:
   csv_writer = csv.writer(csv_file, delimiter=',')
   csv_writer.writerow(["business_id_1", "business_id_2", "similarity"])
   for result in results:
-      csv_writer.writerow([result[0][0], result[0][1], str(result[1])])
+      csv_writer.writerow([result[0], result[1], str(result[2])])
 csv_file.close()
 
 print("Duration:", str(time.time() - start_time))
